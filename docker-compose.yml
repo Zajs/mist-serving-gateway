@@ -1,0 +1,29 @@
+version: "3"
+services:
+  consul:
+    image: consul:latest
+    ports:
+      - "8500:8500"
+    environment:
+      CONSUL_CLIENT_INTERFACE: "eth0"
+    restart: always
+
+  mist-serving-gateway:
+    image: mist-serving-gateway:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      - consul
+    restart: always
+
+  simple-mist-runtime:
+    image: simple-mist-runtime:latest
+    ports:
+      - "8081:8080"
+    depends_on:
+      - consul
+    environment:
+      MODEL_VERSION: "version"
+      MODEL_NAME: "name"
+      MODEL_TYPE: "typ"
+    restart: always
